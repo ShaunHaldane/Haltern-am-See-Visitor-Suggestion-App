@@ -1,0 +1,84 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.Entity;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Data;
+
+@Entity
+@Table(name="visitors")
+@Data
+public class Visitor {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="age")
+	private int age;
+	
+	@ManyToMany(mappedBy="visitors")
+	private List<Interest> interests = new ArrayList<>();
+	
+	@ManyToMany(mappedBy="visitors")
+	private List<Disability> disabilities = new ArrayList<>();
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_id", nullable=false)
+	@JsonIgnore
+	private User user;
+	
+	public void addInterest(Interest interest) {
+		this.interests.add(interest);
+	}
+	
+	public void addDisability(Disability disability) {
+		this.disabilities.add(disability);
+	}
+
+	public Visitor() {}
+
+	public Visitor(String name) {
+		this.name = name;
+	}
+	
+	public void removeInterest(Interest interest) {
+        this.getInterests().remove(interest);
+        interest.getVisitors().remove(this);
+    }
+	
+	public void removeInterests() {
+		for (Interest interest : new HashSet<>(interests)) {
+            removeInterest(interest);
+        }
+    }
+	
+	public void removeDisability(Disability disability) {
+        this.getDisabilities().remove(disability);
+        disability.getVisitors().remove(this);
+    }
+	
+	public void removeDisabilities() {
+		for (Disability disability : new HashSet<>(disabilities)) {
+            removeDisability(disability);
+        }
+    }
+
+}

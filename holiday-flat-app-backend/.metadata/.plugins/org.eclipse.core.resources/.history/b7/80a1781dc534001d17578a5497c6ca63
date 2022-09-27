@@ -1,0 +1,95 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.Entity;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import lombok.Data;
+
+@Entity
+@Table(name="places")
+@Data
+public class Place {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Lob
+	@Column(name="description", columnDefinition = "text")
+	private String description;
+	
+	@Column(name="accessability_description")
+	private String accessabilityDescription;
+	
+	@Lob
+	@Column(name = "image_url", columnDefinition = "text")
+    private String imageUrl;
+	
+	@Column(name="duration")
+	private String duration;
+	
+	@Lob 
+	@Column(name="adress", columnDefinition = "text")
+	private String adress;
+	
+	@Column(name="link")
+	private String link;
+	
+	@ManyToMany(mappedBy="places")
+	private List<Interest> interests = new ArrayList<>();
+	
+	@ManyToMany(mappedBy="places")
+	private List<Disability> disabilities = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	private List<Comment> comments;
+	
+	public Place() {}
+
+	public Place(String name) {
+		this.name = name;
+	}
+	
+	public void addInterest(Interest interest) {
+		this.interests.add(interest);
+	}
+	
+	public void addDisability(Disability disability) {
+		this.disabilities.add(disability);
+	}
+	
+	public void removeInterest(Interest interest) {
+        this.getInterests().remove(interest);
+        interest.getPlaces().remove(this);
+    }
+	
+	public void removeInterests() {
+		for (Interest interest : new HashSet<>(interests)) {
+            removeInterest(interest);
+        }
+    }
+	
+	public void removeDisability(Disability disability) {
+        this.getDisabilities().remove(disability);
+        disability.getPlaces().remove(this);
+    }
+	
+	public void removeDisabilities() {
+		for (Disability disability : new HashSet<>(disabilities)) {
+            removeDisability(disability);
+        }
+    }
+}

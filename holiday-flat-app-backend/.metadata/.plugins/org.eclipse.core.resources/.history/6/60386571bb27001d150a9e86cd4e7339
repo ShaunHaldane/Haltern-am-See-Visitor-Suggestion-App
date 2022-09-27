@@ -1,0 +1,90 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.Disability;
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.Interest;
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.Place;
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.User;
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.Visitor;
+import com.shaunhaldane.holidayflatappbackendinitializr.repository.PlaceRepository;
+import com.shaunhaldane.holidayflatappbackendinitializr.repository.UserRepository;
+import com.shaunhaldane.holidayflatappbackendinitializr.repository.VisitorRepository;
+import com.shaunhaldane.holidayflatappbackendinitializr.security.service.UserDetailsServiceImpl;
+
+@Service
+public class UserService {
+	
+	@Autowired
+	PlaceRepository placeRepository;
+	
+	@Autowired
+	VisitorRepository visitorRepository;
+	
+	
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private UserDetailsServiceImpl userDetailsService;
+
+	public Set<Place> getRecommendedPlaces() {
+		User user = userRepository.findUserById(userDetailsService.getLoggedInUser().getId());
+		List<Place> places = new ArrayList<Place>();
+		List<Place> recommendedPlaces = new ArrayList<Place>();
+		List<Visitor> visitors = user.getVisitors();
+		List<Integer> userDisabilities = new ArrayList<Integer>();
+		List<Integer> userInterests = new ArrayList<Integer>();
+		
+		visitors.stream().forEach(visitor -> {
+			List<Disability> disabilities = visitor.getDisabilities();
+			disabilities.stream().forEach(disability -> {
+				places.addAll(placeRepository.findPlacesByDisabilitiesId(disability.getId()));
+				
+			});
+		});
+		visitors.stream().forEach(visitor -> {
+			List<Interest> interests = visitor.getInterests();
+			interests.stream().forEach(interest -> {
+				places.addAll(placeRepository.findPlacesByInterestsId(interest.getId()));
+			});
+		});
+		
+		places.stream().collect(Collectors.toSet());
+		
+		visitors.stream().forEach(visitor -> {
+			List<Disability> disabilities = visitor.getDisabilities();
+			disabilities.stream().forEach(disability -> {
+				userDisabilities.add(disability.getId());
+			});
+		});
+		
+		visitors.stream().forEach(visitor -> {
+			List<Interest> interests = visitor.getInterests();
+			interests.stream().forEach(interest -> {
+				userInterests.add(interest.getId());
+			});
+		});
+		
+		places.stream().forEach(place -> {
+			if (place.getDisabilities().contains(userDisabilities)) {
+				recommendedPlaces.add(place);
+			}
+		});
+				
+		return recommendedPlaces.stream().collect(Collectors.toSet());
+	}
+
+	public Iterable<Visitor> getVisitors() {
+		User user = userRepository.findUserById(userDetailsService.getLoggedInUser().getId());
+		return visitorRepository.getAllVisitorsByUserId(user.getId());
+	}
+
+}

@@ -1,0 +1,56 @@
+<div style="width: 75%; margin: auto;">
+    <h3><br></h3>
+    <h3>Add Visitor</h3>
+    <h3><br></h3>
+    <div class="submit-form">
+        <div *ngIf="!submitted">
+        <div class="form-group">
+            <label for="name"><b>Name</b></label>
+            <input
+            type="text"
+            class="form-control"
+            id="name"
+            required
+            [(ngModel)]="visitor.name"
+            name="name"
+            />
+        </div>
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item">
+                <div class="form-group">
+                    <label for="interests"><b>Interests</b></label>
+                    <ul *ngFor="let i of interests">
+                        <li>
+                            {{i.name}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input class="float-right" type="checkbox" (click)="interestsCheckboxClicked(i.id)" id="interest">
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="form-group">
+                    <label for="interests"><b>Disabilities</b></label>
+                    <ul *ngFor="let d of disabilities">
+                        <li>
+                            {{d.name}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input class="float-right" type="checkbox" (click)="disabilitiesCheckboxClicked(d.id)">
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <p><br></p>
+        <button (click)="saveVisitor()" class="btn btn-success">Add</button>
+        </div>
+        <h3><br></h3>
+        <div *ngIf="submitted">
+        <h4>You submitted successfully!</h4>
+        </div>
+    </div>
+</div>
+
+

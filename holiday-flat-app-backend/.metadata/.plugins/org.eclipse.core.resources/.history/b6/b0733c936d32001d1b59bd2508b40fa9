@@ -1,0 +1,221 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.controller;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.Disability;
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.Interest;
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.Place;
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.User;
+import com.shaunhaldane.holidayflatappbackendinitializr.Entity.Visitor;
+import com.shaunhaldane.holidayflatappbackendinitializr.exception.GlobalExceptionHandler;
+import com.shaunhaldane.holidayflatappbackendinitializr.repository.DisabilityRepository;
+import com.shaunhaldane.holidayflatappbackendinitializr.repository.InterestRepository;
+import com.shaunhaldane.holidayflatappbackendinitializr.repository.PlaceRepository;
+import com.shaunhaldane.holidayflatappbackendinitializr.repository.UserRepository;
+import com.shaunhaldane.holidayflatappbackendinitializr.repository.VisitorRepository;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
+@RequestMapping("/api/admin")
+@PreAuthorize("hasRole('ADMIN')")
+public class AdminController {
+	
+	@Autowired
+	private InterestRepository interestRepository;
+	
+	@Autowired
+	private DisabilityRepository disabilityRepository;
+	
+	@Autowired
+	private GlobalExceptionHandler globalExceptionHandler;
+	
+	@Autowired
+	private PlaceRepository placeRepository;
+	
+	@Autowired
+	private VisitorRepository visitorRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	////// Interests and Disabilities
+	
+	@PostMapping("/add-interest")
+	public ResponseEntity<?> createInterest(@RequestBody Interest interest, BindingResult result) {
+		ResponseEntity<?> errorMap = globalExceptionHandler.MapValidationErrors(result);
+		if(errorMap!=null) return errorMap;
+		Interest newInterest = interestRepository.save(interest);
+		return new ResponseEntity<Interest>(newInterest, HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping("/interests/{id}")
+	public ResponseEntity<HttpStatus> deleteInterest(@PathVariable int id) {
+		interestRepository.deleteById(id);
+		return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping("/interests")
+	public Iterable<Interest> getInterests() {
+		return interestRepository.findAll();
+	}
+	
+	@PostMapping("/add-disability")
+	public ResponseEntity<?> createDisability(@RequestBody Disability disability, BindingResult result) {
+		ResponseEntity<?> errorMap = globalExceptionHandler.MapValidationErrors(result);
+		if(errorMap!=null) return errorMap;
+		Disability newDisability = disabilityRepository.save(disability);
+		return new ResponseEntity<Disability>(newDisability, HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping("/disabilities/{id}")
+	public ResponseEntity<HttpStatus> deleteDisability(@PathVariable int id) {
+		disabilityRepository.deleteById(id);
+		return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping("/disabilities")
+	public Iterable<Disability> getDisabilities() {
+		return disabilityRepository.findAll();
+	}
+	
+	
+	////// Places
+	
+	@PostMapping("/add-place")
+	public ResponseEntity<Place> createPlace(@RequestBody Place place) {
+		Place _place = new Place();
+		_place.setId(place.getId());
+		_place.setName(place.getName());
+		_place.setAccessabilityDescription(place.getAccessabilityDescription());
+		_place.setAdress(place.getAdress());
+		_place.setAgeRecomendationFrom(place.getAgeRecomendationFrom());
+		_place.setAgeRecomendationTo(place.getAgeRecomendationTo());
+		_place.setDescription(place.getDescription());
+		_place.setDuration(place.getDuration());
+		_place.setImageUrl(place.getImageUrl());
+		_place.setIndoor(place.getIndoor());
+		_place.setLink(place.getLink());
+		_place.setInterests(place.getInterests().stream().map(I -> {
+			Interest interest = I;
+			if(interest.getId() > 0) {
+				interest = interestRepository.findById(interest.getId());
+			}
+			interest.addPlace(_place);
+			return interest;
+		}).collect(Collectors.toList()));
+		
+		_place.setDisabilities(place.getDisabilities().stream().map(D -> {
+			Disability disability = D;
+			if(disability.getId() > 0) {
+				disability = disabilityRepository.findById(disability.getId());
+			}
+			disability.addPlace(_place);
+			return disability;
+		}).collect(Collectors.toList()));
+		
+		placeRepository.save(_place);
+		
+		return new ResponseEntity<>(_place, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/places/{id}")
+	public Place getPlace(@PathVariable("id") int id) {
+		Place place = placeRepository.findById(id);
+		return place;
+	}
+	
+	@PutMapping("/places/{id}")
+	public ResponseEntity<Place> editPlace(@PathVariable("id") int id, 
+			@RequestBody Place place) {
+		Place originalPlace = placeRepository.findById(id);
+		originalPlace.setName(place.getName());
+		originalPlace.setAccessabilityDescription(place.getAccessabilityDescription());
+		originalPlace.setAdress(place.getAdress());
+		originalPlace.setAgeRecomendationFrom(place.getAgeRecomendationFrom());
+		originalPlace.setAgeRecomendationTo(place.getAgeRecomendationTo());
+		originalPlace.setDescription(place.getDescription());
+		originalPlace.setDuration(place.getDuration());
+		originalPlace.setImageUrl(place.getImageUrl());
+		originalPlace.setIndoor(place.getIndoor());
+		originalPlace.setLink(place.getLink());
+		originalPlace.removeInterests();
+		originalPlace.removeDisabilities();
+		originalPlace.setInterests(place.getInterests().stream().map(I -> {
+			Interest interest = I;
+			if(interest.getId() > 0) {
+				interest = interestRepository.findById(interest.getId());
+			}
+			interest.addPlace(originalPlace);
+			return interest;
+		}).collect(Collectors.toList()));
+		
+		originalPlace.setDisabilities(place.getDisabilities().stream().map(D -> {
+			Disability disability = D;
+			if(disability.getId() > 0) {
+				disability = disabilityRepository.findById(disability.getId());
+			}
+			disability.addPlace(originalPlace);
+			return disability;
+		}).collect(Collectors.toList()));
+		
+		placeRepository.save(originalPlace);
+		
+		return new ResponseEntity<>(originalPlace, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/places")
+	public List<Place> getPlaces() {
+		List<Place> places = placeRepository.findAll();
+		return places;
+	}
+	
+	@DeleteMapping("/places/{id}")
+	public ResponseEntity<HttpStatus> deletePlace(@PathVariable("id") int id) {
+		Place place = placeRepository.findById(id);
+        //Remove the related interests and disabilities from place entity.
+		place.removeInterests();
+        place.removeDisabilities();
+        placeRepository.deleteById(place.getId());
+	    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	  }
+	  
+	
+	////// Visitors
+	
+	@GetMapping("/visitors")
+	public Iterable<Visitor> getVisitors() {
+		return visitorRepository.findAll();
+	}
+	
+	@GetMapping("/families")
+	public Iterable<User> getFamilies() {
+		return userRepository.findAll();
+	}
+	
+	@DeleteMapping("/visitors/{id}")
+	public ResponseEntity<HttpStatus> deleteVisitor(@PathVariable("id") int id) {
+		Visitor visitor = visitorRepository.findById(id);
+        //Remove the related interests and disabilities from visitor entity.
+        visitor.removeInterests();
+        visitor.removeDisabilities();
+        visitorRepository.deleteById(visitor.getId());
+	    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	  }
+
+}

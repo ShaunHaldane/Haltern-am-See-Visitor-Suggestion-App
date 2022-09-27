@@ -1,0 +1,50 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.Entity;
+
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
+
+import lombok.Data;
+
+@Entity
+@Table(name="booking")
+@Data
+@NamedNativeQuery(name="Booking.findLastEntry", query="select * from drp.booking where Id=(SELECT MAX(id) FROM drp.booking)", resultClass=Booking.class)
+public class Booking {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="contact")
+	private String contact;
+	
+	@Column(name="email")
+	private String email;
+	
+	@Column(name="arrival_date")
+	private LocalDate arrivalDate;
+	
+	@Column(name="departure_date")
+	private LocalDate departureDate;
+
+	public Booking() {}
+
+	public Booking(String name, String contact, String email, LocalDate arrivalDate, LocalDate departureDate) {
+		this.name = name;
+		this.contact = contact;
+		this.email = email;
+		this.arrivalDate = arrivalDate;
+		this.departureDate = departureDate;
+	}
+	
+}

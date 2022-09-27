@@ -1,0 +1,5 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.repository;
+
+public interface CommentRepository {
+
+}

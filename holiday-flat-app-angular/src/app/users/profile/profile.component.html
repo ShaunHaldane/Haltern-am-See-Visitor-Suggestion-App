@@ -1,0 +1,45 @@
+<div class="container-fluid col-10 text-center">
+  <header class="jumbotron">
+    <h3>
+      <strong>Family {{ currentUser.username }} Profile</strong> 
+    </h3>
+    <p>
+      <strong>Email:</strong>
+      {{ currentUser.email }}
+    </p>
+  </header>
+    <h5>Visitors</h5> 
+    <h3><br></h3> 
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Interests</th>
+          <th scope="col">Disabilities</th>
+          <th scope="col">Delete Visitor</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let v of visitors">
+        <tr>
+          <td>{{v.name}}</td>
+          <td>
+            <div *ngFor="let i of v.interests">
+              <p>{{i.name}}</p>
+            </div>
+          </td>
+          <td>
+            <div *ngFor="let d of v.disabilities">
+              <p>{{d.name}}</p>
+            </div>
+          </td>
+          <td><button (click)="deleteVisitor(v.id)" class="btn btn-danger">X</button></td>
+        </tr>
+      </tbody>
+    </table>      
+    <p><br></p>
+    <p><br></p>
+</div>
+  
+  <ng-template #loggedOut>
+    Please login.
+  </ng-template>

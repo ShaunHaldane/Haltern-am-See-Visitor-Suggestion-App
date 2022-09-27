@@ -1,0 +1,34 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.Entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.shaunhaldane.holidayflatappbackendinitializr.dto.EWeekday;
+
+import lombok.Data;
+
+@Entity
+@Table(name="opening_hours")
+@Data
+public class OpeningHours {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="day")
+	private EWeekday day;
+	
+	@Column(name="opening_time")
+	private Double openingTime;
+	
+	@Column(name="closing_time")
+	private Double closingTime;
+}

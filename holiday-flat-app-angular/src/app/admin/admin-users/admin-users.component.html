@@ -1,0 +1,29 @@
+<h3><br></h3>
+<div class="container-fluid col-10 text-center">
+    <a ></a>
+    <h3>Users</h3> 
+    <h3><br></h3>         
+    <table class="table">
+      <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Visitors</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let c of content">
+        <tr>
+            <td>{{c.id}}</td>
+            <td>{{c.username}}</td>
+            <td>{{c.email}}</td>
+            <td *ngFor="let v of c.visitors">
+                <tr><b>{{v.name}}</b></tr>
+                <tr><b>Interests</b></tr>
+                <tr *ngFor="let i of v.interests">{{i.name}}</tr>
+                <tr><b>Disabilities</b></tr>
+                <tr *ngFor="let d of v.disabilities">{{d.name}}</tr>
+            </td>
+        </tr>
+      </tbody>
+    </table>

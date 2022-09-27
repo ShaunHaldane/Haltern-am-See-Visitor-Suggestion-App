@@ -1,0 +1,13 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.dto;
+
+public enum EWeekday {
+	
+	MON,
+    TUE,
+    WED,
+    THURS,
+    FRI,
+    SAT,
+    SUN
+
+}

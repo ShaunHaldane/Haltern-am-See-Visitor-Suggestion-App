@@ -1,0 +1,5 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.dto;
+
+public class VisitorRecomendationDTO {
+
+}

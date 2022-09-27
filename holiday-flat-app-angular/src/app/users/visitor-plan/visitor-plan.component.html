@@ -1,0 +1,62 @@
+<div style="width: 100%; margin: auto; text-align: center;">
+  <h3><br></h3>
+  <h3>Suggestions for Family {{username}}</h3>
+  <h3><br></h3>
+  <hr>
+  <div *ngFor="let p of places" >
+    <h5><br></h5>
+    <h5><u><a style="color:black" href="{{p.link}}" target="blank">{{ p.name }}</a></u></h5>
+    <img src="{{p.imageUrl}}">
+    <p><br></p>
+    <p><b>Description</b></p>
+    <p>{{p.description}}</p>
+    <p><br></p>
+    <p><b>Access</b></p>
+    <p>{{p.accessabilityDescription}}</p>
+    <p><br></p>
+    <p><b>Duration</b></p>
+    <p>{{p.duration}}</p>
+    <p><br></p>
+    <p><a href="{{p.adress}}" target="blank">Click Here for Adress, Directions and Opening Hours</a></p>
+    <p><br></p>
+    <div *ngIf="showAddComment; else showSignin">
+      <div style="width: 80%; margin: auto;">
+          <h5>Add Comment</h5>
+          <div class="submit-form">
+              <div *ngIf="!submitted">
+              <div class="form-group">
+                  <textarea
+                      type="text"
+                      class="form-control"
+                      id="content"
+                      required
+                      [(ngModel)]="comment.content"
+                      name="content">
+                  </textarea>
+              </div>
+              <button (click)="saveComment(p.id)" class="btn btn-success">Submit Comment</button>
+              </div>
+              <div *ngIf="submitted">
+              <p>Submitted!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p><br></p>
+        <ng-template #showSignin>
+            <p><b>Sign up and signin to leave comment.</b></p>
+        </ng-template>
+        <h5><u>Comments</u></h5>
+        <p><br></p>
+        <div *ngFor="let c of p.comments">
+          <div style="border-width:1px; border-style:solid; border-color:#48494a">
+            <p><u>{{c.username}}: {{c.datePosted}}</u></p>
+            <p>{{c.content}}</p>
+          </div>
+          <p><br></p>
+        </div>
+      <hr>
+    </div>
+  </div>
+  
+

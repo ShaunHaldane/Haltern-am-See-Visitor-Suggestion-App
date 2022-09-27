@@ -1,0 +1,64 @@
+<div id="app">
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <a href="#" class="navbar-brand">Haltern am See - Visitor Suggestion App</a>
+    <ul class="navbar-nav mr-auto" routerLinkActive="active">
+
+      <li class="nav-item">
+        <a href="/home" class="btn btn-success ml-2 mr-2" routerLink="home">Home </a>
+      </li>
+      <li class="nav-item">
+        <a href="/contact" class="btn btn-success ml-2 mr-2" routerLink="contact">About Us </a>
+      </li>
+      <li class="nav-item">
+        <a href="/places" class="btn btn-success ml-2 mr-2" routerLink="places">Directory </a>
+      </li>
+
+      <li class="nav-item" *ngIf="showListUsers">
+        <a href="/admin-users" class="btn btn-light ml-2 mr-2" routerLink="admin-users">Users</a>
+      </li>
+      <li class="nav-item" *ngIf="showPlaces">
+        <a href="/admin-places" class="btn btn-light ml-2 mr-2" routerLink="admin-places">Places</a>
+      </li>
+      <li class="nav-item" *ngIf="showAddPlace">
+        <a href="/admin-add-place" class="btn btn-light ml-2 mr-2" routerLink="admin-add-place">Add Place</a>
+      </li>
+      <li class="nav-item" *ngIf="showCategories">
+        <a href="/admin-interests-and-disabilities" class="btn btn-light ml-2 mr-2" routerLink="admin-interests-and-disabilities">Categories</a>
+      </li>
+
+      <li class="nav-item">
+        <a href="/add-visitor" class="btn btn-success ml-2 mr-2" *ngIf="addVisitor" routerLink="add-visitor">Add Visitor</a>
+      </li>
+      <li class="nav-item">
+        <a href="/visitor-suggestions" class="btn btn-success ml-2 mr-2" *ngIf="visitorPlan" routerLink="visitor-suggestions">Places Family {{ username }} Should Visit</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+      <li class="nav-item">
+        <a href="/register" class="btn btn-success ml-2 mr-2" routerLink="register">Sign Up</a>
+      </li>
+      <li class="nav-item">
+        <a href="/login" class="btn btn-success ml-2 mr-2" routerLink="login">Login</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
+      <li class="nav-item">
+        <a href="/profile" class="btn btn-success ml-2 mr-2" routerLink="profile">Profile: {{ username }} </a>
+      </li>
+      <li class="nav-item">
+        <a href class="nav-link" (click)="logout()">LogOut</a>
+      </li>
+    </ul>
+  </nav>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<div class = "float-left">
+  <footer class = "footer">
+     <span>Shaun Haldane. 2022.</span>
+     <a href="/privacy-policy" routerLink="privacy-policy" style="color: #9FA6B2"><span> Privacy Policy.</span></a>
+     <p class="float-right">Contact: <a>shaun.haldane@gmail.com</a></p>
+  </footer>
+</div>

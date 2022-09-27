@@ -1,0 +1,5 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.Entity;
+
+public class Comment {
+
+}

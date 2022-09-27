@@ -1,0 +1,5 @@
+package com.shaunhaldane.holidayflatappbackendinitializr.controller;
+
+public class PublicController {
+
+}

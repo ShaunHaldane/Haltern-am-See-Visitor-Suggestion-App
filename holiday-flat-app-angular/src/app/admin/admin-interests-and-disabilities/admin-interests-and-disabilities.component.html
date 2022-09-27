@@ -1,0 +1,57 @@
+<h3><br></h3>
+<ul class="list-group list-group-horizontal">
+    <li class="list-group-item">
+        <table>
+            <thead>
+                <tr>
+                    <th>Interests</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let i of interests">
+                <tr>
+                    <td>{{i.name}}</td>
+                    <td><button class="btn btn-danger ml-2 mr-2" (click)="deleteInterest(i.id)">X</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+    <li class="list-group-item">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Add Interest</label>
+            <input
+              type="text"
+              class="form-control"
+              required
+              [(ngModel)]="interestName"
+            />
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="createInterest(interestName)">Submit</button>
+    </li>
+    <li class="list-group-item">
+        <table>
+            <thead>
+                <tr>
+                    <th>Disabilities</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let d of disabilities">
+                <tr>
+                    <td>{{d.name}}</td>
+                    <td><button class="btn btn-danger ml-2 mr-2" (click)="deleteDisability(d.id)">X</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+    <li class="list-group-item">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Add Disability</label>
+          <input
+          type="text"
+          class="form-control"
+          required
+          [(ngModel)]="disabilityName"
+        />
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="createDisability(disabilityName)">Submit</button>
+    </li>
+</ul>
