@@ -10,8 +10,8 @@ Me, my wife and my brother bought a house in Haltern am See in 2018. We converte
 
 This app:
 
-Shows a directory of accessible places according to disability which the user can select from a list.
-Allows the user to create an account if they visit Haltern am See with a group. Each person in the group can select their interests and disabilities and the app will recommend places to visit which are suitable for the entire group.
+- Shows a directory of accessible places according to disability which the user can select from a list.
+- Allows the user to create an account if they visit Haltern am See with a group. Each person in the group can select their interests and disabilities and the app will recommend places to visit which are suitable for the entire group.
 
 The Project
 
